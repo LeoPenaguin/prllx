@@ -1,77 +1,111 @@
 <template>
-    <div id="parallax-card__container" @mousemove="mousemove" ref="app">
-      <div id="parallax-card_content">
-        <div id="parallax-card" ref="card" :style="{
+  <div id="parallax-card__container" @mousemove="mousemove" ref="container">
+    <div id="parallax-card__content" :style="rotate3dValue">
+      <div
+        id="parallax-card"
+        ref="card"
+        :style="{
           perspective: `${perspectiveRange}px`,
-          perspectiveOrigin: `${originXRange}% ${originYRange}%`
-        }">
-          <div class="layer layer_back">
-            <img src="./assets/1.png" alt="" srcset="">
-          </div>
-          <div class="layer layer_1">
-            <img src="./assets/2.png" alt="" srcset="">
-          </div>
-          <div class="layer layer_2">
-            <img src="./assets/3.png" alt="" srcset="">
-          </div>
-          <div class="layer layer_3">
-            <img src="./assets/4.png" alt="" srcset="">
-          </div>
-          <div class="layer layer_4">
-            <img src="./assets/5.png" alt="" srcset="">
-          </div>
+          perspectiveOrigin: `${originXRange}% ${originYRange}%`,
+        }"
+      >
+        <div
+          v-for="layer in layers"
+          :key="layer.position"
+          class="layer"
+          :class="['layer_' + layer.position]"
+        >
+          <img :src="layer.img" :alt="layer.name" />
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-} from 'vue';
+import { defineComponent, PropType, ref } from "vue";
+import { Layers } from "@/types/interfaces.ts";
 
 export default defineComponent({
+  name: "parallaxCard",
   props: {
-    perspectiveRange: Number,
-    originXRange: Number,
-    originYRange: Number,
-    layers: [],
+    perspectiveRange: {
+      type: Number,
+      required: true,
+    },
+    layers: {
+      type: Array as PropType<Layers[]>,
+      required: true,
+    },
   },
+  emits: ["update:originXRange", "update:originYRange"],
   setup() {
-    const perspectiveRange = ref(700);
-    const originXRange = ref(50);
-    const originYRange = ref(50);
+    const originXRange = ref(0);
+    const originYRange = ref(0);
+    const rotate3dValue = ref({});
 
-    const app = ref<HTMLInputElement | null>(null);
+    const container = ref<HTMLInputElement | null>(null);
     const card = ref<HTMLInputElement | null>(null);
 
     const mousemove = (event: MouseEvent) => {
-      originXRange.value = ((event.clientX / app.value?.offsetWidth) * 100);
-      originYRange.value = ((event.clientY / app.value?.offsetHeight) * 100);
+      const percentOf = (val1: number, val2: number | undefined) =>
+        (val1 / val2) * 100;
+
+      const rect = container.value.getBoundingClientRect();
+      const x = event.clientX - rect.left; // x position within the element.
+      const y = event.clientY - rect.top; // y position within the element.
+
+      originXRange.value = percentOf(x, container?.value?.offsetWidth);
+      originYRange.value = percentOf(y, container?.value?.offsetHeight);
+
+      const transforms = (
+        xPostion: number,
+        yPostion: number,
+        component: HTMLInputElement
+      ) => {
+        const box = component.getBoundingClientRect();
+        const calcX = -(yPostion - box.y - box.height / 2) / 500;
+        const calcY = (xPostion - box.x - box.width / 2) / 500;
+
+        return (
+          `perspective(100px) ` +
+          `rotateX(${calcX}deg) ` +
+          `rotateY(${calcY}deg) `
+        );
+      };
+
+      rotate3dValue.value = {
+        transform: transforms(x, y, container.value),
+      };
     };
 
     return {
-      perspectiveRange,
+      mousemove,
+      container,
+      card,
+      rotate3dValue,
       originXRange,
       originYRange,
-      mousemove,
-      app,
-      card,
     };
   },
 });
 </script>
 
 <style lang="scss">
-
 #parallax-card__container {
-  background: black;
+  background: linear-gradient(
+    140deg,
+    rgb(2, 0, 36) 0%,
+    rgb(0 0 46) 35%,
+    rgb(0 57 68) 100%
+  );
+
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  perspective: 2000;
 }
 
 #parallax-card__content {
@@ -94,36 +128,31 @@ export default defineComponent({
       left: 0px;
       right: 0px;
       transition: transform 1s;
+      background: rgba(white, 0.1);
+      pointer-events: none;
       img {
         width: 100%;
         height: 100%;
       }
-      &.layer_back {
-        transform: translateZ(0px);
-        background:  rgba(white, 1);
-      }
       &_1 {
-          transform: translateZ(50px);
-          background:  rgba(white, 0.1);
-          pointer-events: none;
+        transform: translateZ(0px);
       }
       &_2 {
-          transform: translateZ(100px);
-          background:  rgba(white, 0.1);
-          pointer-events: none;
+        transform: translateZ(50px);
       }
       &_3 {
-          transform: translateZ(150px);
-          background:  rgba(white, 0.1);
-          pointer-events: none;
+        transform: translateZ(100px);
       }
       &_4 {
-          transform: translateZ(200px);
-          background:  rgba(white, 0.1);
-          pointer-events: none;
+        transform: translateZ(150px);
+      }
+      &_5 {
+        transform: translateZ(200px);
+      }
+      &_5 {
+        transform: translateZ(250px);
       }
     }
   }
 }
-
 </style>

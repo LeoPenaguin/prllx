@@ -3,18 +3,13 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'plugin:vue/essential',
-    'airbnb-base',
-  ],
+  extends: ["plugin:vue/essential", "airbnb-base", "prettier"],
   parserOptions: {
-    ecmaVersion: 'latest',
-    parser: '@typescript-eslint/parser',
+    ecmaVersion: "latest",
+    parser: "@typescript-eslint/parser",
   },
-  plugins: [
-    'vue',
-    '@typescript-eslint',
-  ],
+  plugins: ["vue", "@typescript-eslint", "prettier"],
   rules: {
+    "prettier/prettier": "error",
   },
 };
