@@ -1,12 +1,18 @@
 <template>
-  <div id="parallax-card__container" @mousemove="mousemove" ref="container">
-    <div id="parallax-card__content" :style="rotate3dValue">
+  <div
+    id="parallax-card__container"
+    @mousemove="mousemove"
+    :style="{ backgroundColor }"
+    ref="container"
+  >
+    <div id="parallax-card__content" :style="style">
       <div
         id="parallax-card"
         ref="card"
+        v-if="originRange"
         :style="{
           perspective: `${perspectiveRange}px`,
-          perspectiveOrigin: `${originXRange}% ${originYRange}%`,
+          perspectiveOrigin: `${originRange.x}% ${originRange.y}%`,
         }"
       >
         <div
@@ -14,6 +20,7 @@
           :key="layer.position"
           class="layer"
           :class="['layer_' + layer.position]"
+          :style="{ transform: `translateZ(${layer.depth}px)` }"
         >
           <img :src="layer.img" :alt="layer.name" />
         </div>
@@ -23,29 +30,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
-import { Layers } from "@/types/interfaces.ts";
+import { defineComponent, PropType, computed, ref, inject, toRef } from "vue";
 
 export default defineComponent({
   name: "parallaxCard",
-  props: {
-    perspectiveRange: {
-      type: Number,
-      required: true,
-    },
-    layers: {
-      type: Array as PropType<Layers[]>,
-      required: true,
-    },
-  },
-  emits: ["update:originXRange", "update:originYRange"],
   setup() {
-    const originXRange = ref(0);
-    const originYRange = ref(0);
-    const rotate3dValue = ref({});
+    const { state, setOrigin, calcCardRotation } = inject("CARD-STORE");
+
+    const originRange = toRef(state, "originRange");
 
     const container = ref<HTMLInputElement | null>(null);
     const card = ref<HTMLInputElement | null>(null);
+    const rotate3dValue = ref({});
 
     const mousemove = (event: MouseEvent) => {
       const percentOf = (val1: number, val2: number | undefined) =>
@@ -55,37 +51,31 @@ export default defineComponent({
       const x = event.clientX - rect.left; // x position within the element.
       const y = event.clientY - rect.top; // y position within the element.
 
-      originXRange.value = percentOf(x, container?.value?.offsetWidth);
-      originYRange.value = percentOf(y, container?.value?.offsetHeight);
-
-      const transforms = (
-        xPostion: number,
-        yPostion: number,
-        component: HTMLInputElement
-      ) => {
-        const box = component.getBoundingClientRect();
-        const calcX = -(yPostion - box.y - box.height / 2) / 500;
-        const calcY = (xPostion - box.x - box.width / 2) / 500;
-
-        return (
-          `perspective(100px) ` +
-          `rotateX(${calcX}deg) ` +
-          `rotateY(${calcY}deg) `
-        );
-      };
+      setOrigin(
+        percentOf(x, container?.value?.offsetWidth),
+        percentOf(y, container?.value?.offsetHeight)
+      );
 
       rotate3dValue.value = {
-        transform: transforms(x, y, container.value),
+        transform: calcCardRotation(x, y, container.value),
       };
     };
+
+    const style = computed(() => ({
+      ...rotate3dValue.value,
+      aspectRatio: state.aspectRatio,
+    }));
 
     return {
       mousemove,
       container,
       card,
       rotate3dValue,
-      originXRange,
-      originYRange,
+      originRange,
+      style,
+      perspectiveRange: toRef(state, "perspectiveRange"),
+      layers: toRef(state, "layers"),
+      backgroundColor: toRef(state, "backgroundColor"),
     };
   },
 });
@@ -93,13 +83,6 @@ export default defineComponent({
 
 <style lang="scss">
 #parallax-card__container {
-  background: linear-gradient(
-    140deg,
-    rgb(2, 0, 36) 0%,
-    rgb(0 0 46) 35%,
-    rgb(0 57 68) 100%
-  );
-
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -128,29 +111,10 @@ export default defineComponent({
       left: 0px;
       right: 0px;
       transition: transform 1s;
-      background: rgba(white, 0.1);
       pointer-events: none;
       img {
         width: 100%;
         height: 100%;
-      }
-      &_1 {
-        transform: translateZ(0px);
-      }
-      &_2 {
-        transform: translateZ(50px);
-      }
-      &_3 {
-        transform: translateZ(100px);
-      }
-      &_4 {
-        transform: translateZ(150px);
-      }
-      &_5 {
-        transform: translateZ(200px);
-      }
-      &_5 {
-        transform: translateZ(250px);
       }
     }
   }

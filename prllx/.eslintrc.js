@@ -12,4 +12,11 @@ module.exports = {
   rules: {
     "prettier/prettier": "error",
   },
+  settings: {
+    "import/resolver": {
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
+  },
 };

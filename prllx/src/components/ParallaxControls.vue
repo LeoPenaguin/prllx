@@ -1,80 +1,99 @@
 <template>
   <div id="parallax-controls">
-    <p>
-      <label>
-        perspective
-        <input
-          :value="perspectiveRange"
-          @input="
-            $emit('update:perspectiveRange', parseInt($event.target.value))
-          "
-          type="range"
-          min="1300"
-          max="2000"
-          data-units="px"
-        />
-        {{ perspectiveRange }}
-      </label>
-    </p>
-    <p>
-      <label>
-        Ratio
-        <input
-          :value="aspectRatio.x"
-          @input="$emit('update:aspectRatio.x', $event.target.value)"
-          type="text"
-        />
-        <input
-          :value="aspectRatio.y"
-          @input="$emit('update:aspectRatio.y', $event.target.value)"
-          type="text"
-        />
-        {{ aspectRatio }}
-      </label>
-    </p>
+    <div class="control">
+      <label>perspective</label>
+      <input
+        :value="perspectiveRange"
+        @input="setPerspectiveRange($event.target.value)"
+        type="range"
+        min="1300"
+        max="2000"
+        data-units="px"
+      />
+      <p>{{ perspectiveRange }}</p>
+    </div>
+    <div class="control">
+      <label>Ratio</label>
+      <select name="ratio" @change="setAspectRatio($event.target.value)">
+        <option
+          v-for="(ratio, index) in AspectRatio"
+          :key="ratio"
+          :value="ratio"
+          :selected="AspectRatio.card === ratio"
+        >
+          {{ index }}
+        </option>
+      </select>
+      <p>{{ aspectRatio }}</p>
+    </div>
     <div id="parallax-controls__layers">
       <ul>
         <li v-for="layer in layers" :key="layer.position">
           <img :src="layer.img" :alt="layer.name" />
 
-          ({{ layer.position }}) {{ layer.name }}
+          <input
+            :value="layer.depth"
+            @input="updateLayer({ ...layer, depth: $event.target.value })"
+            type="number"
+          />
+
+          ({{ layer.position }}) {{ layer.name }} {{ layer.depth }}
         </li>
       </ul>
+    </div>
+    <p>{{ originRange }}</p>
+    <div class="control">
+      <input
+        :value="backgroundColor"
+        @input="setBackgroundColor($event.target.value)"
+        type="color"
+        id="background"
+        name="background"
+      />
+      <p>{{ backgroundColor }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { Layers } from "@/types/interfaces.ts";
+import { defineComponent, inject, toRef } from "vue";
+import cardStore from "./card-store.ts";
+import { AspectRatio } from "../types/interfaces";
 
 export default defineComponent({
-  props: {
-    perspectiveRange: {
-      type: Number,
-      required: true,
-    },
-    aspectRatio: {
-      type: Object,
-      required: true,
-    },
-    layers: {
-      type: [] as PropType<Layers[]>,
-      required: true,
-    },
+  setup() {
+    const {
+      state,
+      setPerspectiveRange,
+      setAspectRatio,
+      setBackgroundColor,
+      updateLayer,
+    } = inject("CARD-STORE");
+
+    return {
+      perspectiveRange: toRef(state, "perspectiveRange"),
+      layers: toRef(state, "layers"),
+      aspectRatio: toRef(state, "aspectRatio"),
+      backgroundColor: toRef(state, "backgroundColor"),
+      originRange: toRef(state, "originRange"),
+      setPerspectiveRange,
+      setAspectRatio,
+      setBackgroundColor,
+      updateLayer,
+      AspectRatio,
+    };
   },
-  emits: [
-    "update:perspectiveRange",
-    "update:aspectRatio.x",
-    "update:aspectRatio.y",
-  ],
 });
 </script>
 
 <style lang="scss">
 #parallax-controls {
+  width: 20%;
+  padding: 10px;
+  background: #000000;
+  color: white;
   &__layers {
-    background: black;
+    background: rgb(22, 22, 22);
     padding: 3px;
 
     ul {
@@ -91,7 +110,7 @@ export default defineComponent({
       }
     }
     img {
-      width: 30%;
+      width: 20%;
       background: white;
       margin: 3px;
     }
