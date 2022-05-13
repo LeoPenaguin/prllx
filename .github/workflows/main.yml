@@ -1,19 +1,9 @@
-- name: Deploy to GitHub Pages
-  uses: JamesIves/github-pages-deploy-action@v4.3.3
-  with:
-    ssh-key: # optional
-    token: # optional, default is ${{ github.token }}
-    branch: 
-    folder: 
-    target-folder: # optional
-    commit-message: # optional
-    clean: # optional, default is true
-    clean-exclude: # optional
-    dry-run: # optional
-    force: # optional, default is true
-    git-config-name: # optional
-    git-config-email: # optional
-    repository-name: # optional
-    workspace: # optional
-    single-commit: # optional
-    silent: # optional
+name: Build and Deploy
+on: [push]
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
