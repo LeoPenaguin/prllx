@@ -1,0 +1,19 @@
+- name: Deploy to GitHub Pages
+  uses: JamesIves/github-pages-deploy-action@v4.3.3
+  with:
+    ssh-key: # optional
+    token: # optional, default is ${{ github.token }}
+    branch: 
+    folder: 
+    target-folder: # optional
+    commit-message: # optional
+    clean: # optional, default is true
+    clean-exclude: # optional
+    dry-run: # optional
+    force: # optional, default is true
+    git-config-name: # optional
+    git-config-email: # optional
+    repository-name: # optional
+    workspace: # optional
+    single-commit: # optional
+    silent: # optional
