@@ -9,7 +9,7 @@
 import { defineComponent, provide } from "vue";
 import ParallaxCard from "./ParallaxCard.vue";
 import ParallaxControls from "./ParallaxControls.vue";
-import cardStore from "./card-store.ts";
+import cardStore from "./card-store";
 
 export default defineComponent({
   components: {

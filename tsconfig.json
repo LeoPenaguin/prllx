@@ -1,4 +1,5 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
     "useDefineForClassFields": true,
@@ -13,6 +14,22 @@
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "*.ts",
+    "*.json",
+    "packages/**/*.js",
+    "packages/**/*.ts",
+    "packages/**/*.vue",
+    "apps/**/vite.config.*",
+    "apps/**/src/**/*.ts",
+    "apps/**/src/**/*.d.ts",
+    "apps/**/src/**/*.vue",
+    "storybook/**/*.ts",
+    "storybook/babel.config.js",
+    "e2e/**/*.ts",
+    "stub/**/*.ts",
+    "scripts/**/*.ts",
+    "scripts/**/*.json"
+  ],
+  "exclude": ["node_modules/**/*"]
 }

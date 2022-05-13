@@ -57,7 +57,6 @@
 
 <script lang="ts">
 import { defineComponent, inject, toRef } from "vue";
-import cardStore from "./card-store.ts";
 import { AspectRatio } from "../types/interfaces";
 
 export default defineComponent({

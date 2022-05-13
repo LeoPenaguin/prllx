@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, ref, inject, toRef } from "vue";
+import { defineComponent, computed, ref, inject, toRef } from "vue";
 
 export default defineComponent({
   name: "parallaxCard",

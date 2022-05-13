@@ -10,4 +10,4 @@ export enum AspectRatio {
   'card' = '2.5 / 3.5',
   '4:3' = '4 / 3',
   '16:9' = '16 / 9'
-} 
+}
