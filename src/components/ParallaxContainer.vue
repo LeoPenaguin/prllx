@@ -6,10 +6,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide } from "vue";
-import ParallaxCard from "./ParallaxCard.vue";
-import ParallaxControls from "./ParallaxControls.vue";
-import cardStore from "./card-store";
+import { defineComponent, provide } from 'vue';
+import ParallaxCard from './ParallaxCard.vue';
+import ParallaxControls from './ParallaxControls.vue';
+import cardStore from '../scripts/card-store';
 
 export default defineComponent({
   components: {
@@ -17,7 +17,7 @@ export default defineComponent({
     ParallaxControls,
   },
   setup() {
-    provide("CARD-STORE", cardStore);
+    provide('CARD-STORE', cardStore);
   },
 });
 </script>

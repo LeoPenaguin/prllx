@@ -1,6 +1,5 @@
-
 import { reactive, readonly } from 'vue';
-import { Layer } from '../types/interfaces';
+import type { Layer } from '../types/interfaces';
 
 const state = reactive({
   perspectiveRange: 2000,

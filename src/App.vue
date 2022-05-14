@@ -16,8 +16,8 @@ body {
 </style>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import ParallaxContainer from "./components/ParallaxContainer.vue";
+import { defineComponent } from 'vue';
+import ParallaxContainer from './components/ParallaxContainer.vue';
 
 export default defineComponent({
   components: {

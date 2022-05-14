@@ -1,7 +1,7 @@
 <template>
   <div id="parallax-controls">
     <div class="control">
-      <label>perspective</label>
+      <label>perspective !</label>
       <input
         :value="perspectiveRange"
         @input="setPerspectiveRange($event.target.value)"
@@ -31,11 +31,7 @@
         <li v-for="layer in layers" :key="layer.position">
           <img :src="layer.img" :alt="layer.name" />
 
-          <input
-            :value="layer.depth"
-            @input="updateLayer({ ...layer, depth: $event.target.value })"
-            type="number"
-          />
+          <input :value="layer.depth" @input="updateLayer({ ...layer, depth: $event.target.value })" type="number" />
 
           ({{ layer.position }}) {{ layer.name }} {{ layer.depth }}
         </li>
@@ -56,25 +52,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, toRef } from "vue";
-import { AspectRatio } from "../types/interfaces";
+import { defineComponent, inject, toRef } from 'vue';
+import { AspectRatio } from '../types/interfaces';
 
 export default defineComponent({
   setup() {
-    const {
-      state,
-      setPerspectiveRange,
-      setAspectRatio,
-      setBackgroundColor,
-      updateLayer,
-    } = inject("CARD-STORE");
+    const { state, setPerspectiveRange, setAspectRatio, setBackgroundColor, updateLayer } = inject('CARD-STORE');
 
     return {
-      perspectiveRange: toRef(state, "perspectiveRange"),
-      layers: toRef(state, "layers"),
-      aspectRatio: toRef(state, "aspectRatio"),
-      backgroundColor: toRef(state, "backgroundColor"),
-      originRange: toRef(state, "originRange"),
+      perspectiveRange: toRef(state, 'perspectiveRange'),
+      layers: toRef(state, 'layers'),
+      aspectRatio: toRef(state, 'aspectRatio'),
+      backgroundColor: toRef(state, 'backgroundColor'),
+      originRange: toRef(state, 'originRange'),
       setPerspectiveRange,
       setAspectRatio,
       setBackgroundColor,
