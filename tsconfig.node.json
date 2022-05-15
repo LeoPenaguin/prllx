@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "preserveValueImports": false,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "removeComments": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["esnext", "dom"],
+    "types": ["vite/client", "vitest/globals"],
+    "baseUrl": "./",
+
+    "composite": true,
+    "module": "esnext",
+    "moduleResolution": "node"
+  },
+  "include": ["vite.config.ts","*.ts","*.json",]
+}

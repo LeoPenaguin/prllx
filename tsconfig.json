@@ -1,41 +1,35 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
+    "useDefineForClassFields": true,
     "module": "esnext",
+    "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "types": [
-      "webpack-env",
-      "jest"
-    ],
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "*.ts",
+    "*.json",
+    "packages/**/*.js",
+    "packages/**/*.ts",
+    "packages/**/*.vue",
+    "apps/**/vite.config.*",
+    "apps/**/src/**/*.ts",
+    "apps/**/src/**/*.d.ts",
+    "apps/**/src/**/*.vue",
+    "storybook/**/*.ts",
+    "storybook/babel.config.js",
+    "e2e/**/*.ts",
+    "stub/**/*.ts",
+    "scripts/**/*.ts",
+    "scripts/**/*.json"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules/**/*"]
 }
