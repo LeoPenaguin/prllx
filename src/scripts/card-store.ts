@@ -1,14 +1,21 @@
 import { reactive, readonly } from 'vue';
 import type { Layer } from '../types/interfaces';
+import img1Url from '../assets/1.png';
+import img2Url from '../assets/2.png';
+import img3Url from '../assets/3.png';
+import img4Url from '../assets/4.png';
+import img5Url from '../assets/5.png';
+
+console.log('yes');
 
 const state = reactive({
   perspectiveRange: 2000,
   layers: [
-    { position: 1, name: 'lol0', depth: 0, img: '/src/assets/1.png' },
-    { position: 2, name: 'lol1', depth: 50, img: '/src/assets/2.png' },
-    { position: 3, name: 'lol2', depth: 100, img: '/src/assets/3.png' },
-    { position: 4, name: 'lol3', depth: 150, img: '/src/assets/4.png' },
-    { position: 5, name: 'lol4', depth: 200, img: '/src/assets/5.png' },
+    { position: 1, name: 'lol0', depth: 0, img: img1Url },
+    { position: 2, name: 'lol1', depth: 50, img: img2Url },
+    { position: 3, name: 'lol2', depth: 100, img: img3Url },
+    { position: 4, name: 'lol3', depth: 150, img: img4Url },
+    { position: 5, name: 'lol4', depth: 200, img: img5Url },
   ] as Layer[],
   aspectRatio: '2.5 / 3.5',
   originRange: { x: 50, y: 50 },
