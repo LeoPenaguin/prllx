@@ -1,10 +1,10 @@
 import { reactive, readonly } from 'vue';
-import type { Layer } from '../types/interfaces';
-import img1Url from '../assets/1.png';
-import img2Url from '../assets/2.png';
-import img3Url from '../assets/3.png';
-import img4Url from '../assets/4.png';
-import img5Url from '../assets/5.png';
+import type { Layer, AspectRatio, PerpectiveDepth } from '../types/interfaces';
+import img1Url from '../assets/card2/1.png';
+import img2Url from '../assets/card2/2.png';
+import img3Url from '../assets/card2/3.png';
+import img4Url from '../assets/card2/4.png';
+import img5Url from '../assets/card2/5.png';
 
 console.log('yes');
 
@@ -19,23 +19,28 @@ const state = reactive({
   ] as Layer[],
   aspectRatio: '2.5 / 3.5',
   originRange: { x: 50, y: 50 },
-  backgroundColor: '#000000',
+  backgroundColor: '#212121',
+  isDevMode: false,
 });
 
-function setAspectRatio(value: string) {
+function setAspectRatio(value: AspectRatio) {
   state.aspectRatio = value;
+}
+
+function setPerspectiveDepth(value: PerpectiveDepth) {
+  state.perspectiveRange = value;
 }
 
 function setOrigin(x: number, y: number) {
   state.originRange = { x, y };
 }
 
-function setPerspectiveRange(value: number) {
-  state.perspectiveRange = value;
-}
-
 function setBackgroundColor(value: string) {
   state.backgroundColor = value;
+}
+
+function setIsDevMode(value: boolean) {
+  state.isDevMode = value;
 }
 
 function updateLayer(layer: Layer) {
@@ -53,9 +58,10 @@ function calcCardRotation(xPostion: number, yPostion: number, component: HTMLInp
 export default readonly({
   state,
   setAspectRatio,
+  setPerspectiveDepth,
   setOrigin,
-  setPerspectiveRange,
   setBackgroundColor,
+  setIsDevMode,
   calcCardRotation,
   updateLayer,
 });

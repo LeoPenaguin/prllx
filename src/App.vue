@@ -5,13 +5,10 @@
 </template>
 
 <style lang="scss">
-html,
-body {
-  margin: 0;
-}
+@import './assets/reset.css';
 
-* {
-  box-sizing: border-box;
+html {
+  font-family: sans-serif;
 }
 </style>
 

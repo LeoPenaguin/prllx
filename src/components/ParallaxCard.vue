@@ -1,5 +1,11 @@
 <template>
-  <div id="parallax-card__container" @mousemove="mousemove" :style="{ backgroundColor }" ref="container">
+  <div
+    id="parallax-card__container"
+    :class="{ 'dev-mode': isDevMode }"
+    @mousemove="mousemove"
+    :style="{ backgroundColor }"
+    ref="container"
+  >
     <div id="parallax-card__content" :style="style">
       <div
         id="parallax-card"
@@ -67,12 +73,13 @@ export default defineComponent({
       perspectiveRange: toRef(state, 'perspectiveRange'),
       layers: toRef(state, 'layers'),
       backgroundColor: toRef(state, 'backgroundColor'),
+      isDevMode: toRef(state, 'isDevMode'),
     };
   },
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #parallax-card__container {
   width: 100vw;
   height: 100vh;
@@ -106,6 +113,31 @@ export default defineComponent({
       img {
         width: 100%;
         height: 100%;
+      }
+    }
+  }
+}
+
+#parallax-card__container.dev-mode {
+  #parallax-card__content {
+    overflow: visible;
+    #parallax-card {
+      .layer {
+        &:nth-child(1n) {
+          border: 3px solid green;
+        }
+        &:nth-child(2n) {
+          border: 3px solid red;
+        }
+        &:nth-child(3n) {
+          border: 3px solid blue;
+        }
+        &:nth-child(4n) {
+          border: 3px solid rgb(255, 0, 255);
+        }
+        &:nth-child(5n) {
+          border: 3px solid rgb(255, 238, 0);
+        }
       }
     }
   }

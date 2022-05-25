@@ -1,6 +1,6 @@
 <template>
   <div id="parallax-container">
-    <ParallaxControls class="controls" />
+    <ParallaxControls />
     <ParallaxCard />
   </div>
 </template>
@@ -22,7 +22,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #parallax-container {
   display: flex;
 }
