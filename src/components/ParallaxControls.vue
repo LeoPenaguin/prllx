@@ -1,122 +1,117 @@
 <template>
-  <div id="parallax-controls" :class="{ 'is-hidden': !isVisible }">
-    <button @click="toggleVisibility" class="controls-toggle">Close</button>
-    <div class="control">
-      <label>Dev mode</label>
-      <p>
-        <input :value="isDevMode" @input="setIsDevMode(!isDevMode)" type="checkbox" />
-        {{ isDevMode }}
-      </p>
-    </div>
-    <div class="control">
-      <label>Perspective</label>
-      <div v-for="choice in perspectiveRangeChoices">
-        <input type="radio" :id="choice.name" :name="choice.name" :value="choice.value" v-model="perspectiveRangeRef">
-        <label :for="choice.name">{{choice.label}}</label>
-      </div>
-      {{ perspectiveRangeRef }}
-    </div>
-    <div class="control">
-      <label>Ratio</label>
-      <p>
-        <select name="ratio" @change="setAspectRatio($event.target.value)">
-          <option
-            v-for="(ratio, index) in AspectRatio"
-            :key="ratio"
-            :value="ratio"
-            :selected="AspectRatio.card === ratio"
+  <div
+    id="parallax-controls"
+    :class="{ 'is-hidden': !isVisible }"
+  >
+    <button
+      class="controls-toggle"
+      @click="toggleVisibility"
+    >
+      Close
+    </button>
+    <div class="controls">
+      <div class="control">
+        <label>Dev mode</label>
+        <p>
+          <input
+            :value="store.isDevMode"
+            type="checkbox"
+            @input="store.toggleDevMode()"
           >
-            {{ index }}
-          </option>
-        </select>
-        {{ aspectRatio }}
-      </p>
+        </p>
+      </div>
+      <div class="control radio">
+        <div
+          v-for="choice in perspectiveRangeChoices"
+          :key="choice.name"
+        >
+          <input
+            :id="choice.name"
+            v-model="store.perspectiveRange"
+            class="perspective"
+            type="radio"
+            :name="choice.name"
+            :value="choice.value"
+          >
+          <label :for="choice.name">{{ choice.name }}</label>
+        </div>
+      </div>
+      <div class="control">
+        <label>Background color</label>
+        <p>
+          <input
+            id="background"
+            v-model="store.backgroundColor"
+            type="color"
+            name="background"
+          >
+          {{ store.backgroundColor }}
+        </p>
+      </div>
     </div>
     <div id="parallax-controls__layers">
       <ul>
-        <li v-for="layer in layers" :key="layer.position">
-          <img :src="layer.img" :alt="layer.name" />
+        <li
+          v-for="layer in store.layers"
+          :key="layer.position"
+        >
+          <img
+            :src="layer.img"
+            :alt="layer.name"
+          >
 
-          <input :value="layer.depth" @input="updateLayer({ ...layer, depth: $event.target.value })" type="number" />
+          <input
+            v-model="layer.depth"
+            type="number"
+          >
 
           ({{ layer.position }}) {{ layer.name }} {{ layer.depth }}
         </li>
       </ul>
     </div>
     <div class="info">
-      <p>x: {{ originRange.x }}</p>
-      <p>y: {{ originRange.y }}</p>
-    </div>
-    <div class="control">
-      <label>Background color</label>
-      <p>
-        <input
-          :value="backgroundColor"
-          @input="setBackgroundColor($event.target.value)"
-          type="color"
-          id="background"
-          name="background"
-        />
-        {{ backgroundColor }}
-      </p>
+      <p>x: {{ store.originRange.x }}</p>
+      <p>y: {{ store.originRange.y }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed } from '@vue/reactivity';
-import { defineComponent, inject, toRef, ref } from 'vue';
-import { AspectRatio, PerpectiveDepth } from '../types/interfaces';
+import { defineComponent, ref } from 'vue';
+import { PerpectiveDepth } from '../types/interfaces';
+import useCardStore from '../stores/card';
 
 export default defineComponent({
   setup() {
-    const { state, setIsDevMode, setPerspectiveDepth, setAspectRatio, setBackgroundColor, updateLayer } = inject('CARD-STORE');
-
+    const store = useCardStore();
     const isVisible = ref(true);
 
-    let  perspectiveRange = toRef(state, 'perspectiveRange')
-
-    let perspectiveRangeChoices = ref([
+    const perspectiveRangeChoices = ref([
       {
         name: 'very-large',
         label: 'Very large',
-        value: 1000
+        value: 1000,
       },
       {
         name: 'large',
         label: 'Large',
-        value: 1300
+        value: 1300,
       },
       {
         name: 'medium',
         label: 'Medium',
-        value: 1600
+        value: 1600,
       },
       {
         name: 'small',
         label: 'Small',
-        value: 2000
-      }
-    ])
-
-    let perspectiveRangeRef = computed({
-      set: (value) => { setPerspectiveDepth(value) },
-      get() { return perspectiveRange.value.toString() }
-    })
+        value: 2000,
+      },
+    ]);
 
     return {
-      isDevMode: toRef(state, 'isDevMode'),
-      layers: toRef(state, 'layers'),
-      aspectRatio: toRef(state, 'aspectRatio'),
-      backgroundColor: toRef(state, 'backgroundColor'),
-      originRange: toRef(state, 'originRange'),
-      perspectiveRangeRef,
+      store,
       perspectiveRangeChoices,
-      setIsDevMode,
-      setAspectRatio,
-      setBackgroundColor,
-      updateLayer,
-      AspectRatio,
       PerpectiveDepth,
       isVisible,
       toggleVisibility: () => {
@@ -130,13 +125,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 #parallax-controls {
   width: 300px;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  background: rgba(211, 211, 211, 0.9);
   backdrop-filter: blur(10px);
   position: fixed;
   left: 1rem;
   top: 1rem;
-  bottom: 1rem;
   border-radius: 1rem;
   z-index: 1000;
   color: white;
@@ -154,14 +148,39 @@ export default defineComponent({
     height: 50px;
     border-radius: 1rem;
   }
+
   .control {
     margin-bottom: 1rem;
+
+    &.radio {
+      display: flex;
+      justify-content: space-around;
+
+      .perspective[type='radio'] {
+        display: none;
+      }
+
+      .perspective[type='radio']~label {
+        display: inline-block;
+        background: black;
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+      }
+
+      .perspective[type='radio']:checked~label {
+        background: #4dab00;
+      }
+    }
   }
+
   .info {
     margin-bottom: 1rem;
+    background: red;
   }
+
   &__layers {
-    background: rgb(22, 22, 22);
+    background: rgb(255, 255, 255);
     padding: 3px;
     margin-bottom: 1rem;
 
@@ -171,6 +190,7 @@ export default defineComponent({
       margin: 0;
       display: flex;
       flex-direction: column;
+
       li {
         padding: 0;
         margin: 0;
@@ -178,11 +198,13 @@ export default defineComponent({
         align-items: center;
       }
     }
+
     img {
       width: 20%;
       background: white;
       margin: 3px;
     }
+
     input {
       width: 100px;
     }

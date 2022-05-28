@@ -1,20 +1,12 @@
 <template>
   <div>
-    <ParallaxContainer />
+    <parallax-container />
   </div>
 </template>
 
-<style lang="scss">
-@import './assets/reset.css';
-
-html {
-  font-family: sans-serif;
-}
-</style>
-
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ParallaxContainer from './components/ParallaxContainer.vue';
+import ParallaxContainer from '@/components/ParallaxContainer.vue';
 
 export default defineComponent({
   components: {
@@ -22,3 +14,11 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+@import '@/assets/reset.css';
+
+html {
+  font-family: sans-serif;
+}
+</style>

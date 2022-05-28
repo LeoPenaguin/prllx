@@ -1,23 +1,19 @@
 <template>
   <div id="parallax-container">
-    <ParallaxControls />
-    <ParallaxCard />
+    <parallax-controls />
+    <parallax-card />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, provide } from 'vue';
-import ParallaxCard from './ParallaxCard.vue';
-import ParallaxControls from './ParallaxControls.vue';
-import cardStore from '../scripts/card-store';
+import { defineComponent } from 'vue';
+import ParallaxCard from '@/components/ParallaxCard.vue';
+import ParallaxControls from '@/components/ParallaxControls.vue';
 
 export default defineComponent({
   components: {
     ParallaxCard,
     ParallaxControls,
-  },
-  setup() {
-    provide('CARD-STORE', cardStore);
   },
 });
 </script>
