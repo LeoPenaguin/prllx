@@ -11,42 +11,25 @@
     </button>
     <div class="controls">
       <div class="control">
-        <label>Dev mode</label>
-        <p>
-          <input
-            :value="store.isDevMode"
-            type="checkbox"
-            @input="store.toggleDevMode()"
-          >
-        </p>
-      </div>
-      <div class="control radio">
-        <div
-          v-for="choice in perspectiveRangeChoices"
-          :key="choice.name"
-        >
-          <input
-            :id="choice.name"
-            v-model="store.perspectiveRange"
-            class="perspective"
-            type="radio"
-            :name="choice.name"
-            :value="choice.value"
-          >
-          <label :for="choice.name">{{ choice.name }}</label>
-        </div>
+        <Checkbox
+          :checked="store.isDevMode"
+          label="DEV MODE"
+          @change="store.toggleDevMode()"
+        />
       </div>
       <div class="control">
-        <label>Background color</label>
-        <p>
-          <input
-            id="background"
-            v-model="store.backgroundColor"
-            type="color"
-            name="background"
-          >
-          {{ store.backgroundColor }}
-        </p>
+        <RadioChoice
+          :choices="perspectiveRangeChoices"
+          label="RANGE"
+          @change="({value}) => store.perspectiveRange = value"
+        />
+      </div>
+      <div class="control">
+        <ColorPicker
+          :color="store.backgroundColor"
+          label="BACKGROUND"
+          @change="(value) => store.backgroundColor = value"
+        />
       </div>
     </div>
     <div id="parallax-controls__layers">
@@ -78,10 +61,18 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { PerpectiveDepth } from '../types/interfaces';
-import useCardStore from '../stores/card';
+import { PerpectiveDepth } from '@/types/interfaces';
+import useCardStore from '@/stores/card';
+import Checkbox from '@/components/form/Checkbox.vue';
+import RadioChoice from '@/components/form/RadioChoice.vue';
+import ColorPicker from '@/components/form/ColorPicker.vue';
 
 export default defineComponent({
+  components: {
+    Checkbox,
+    RadioChoice,
+    ColorPicker,
+  },
   setup() {
     const store = useCardStore();
     const isVisible = ref(true);
@@ -124,8 +115,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 #parallax-controls {
-  width: 300px;
-  padding: 1.5rem;
+  width: 250px;
+  padding: 10px;
   background: rgba(211, 211, 211, 0.9);
   backdrop-filter: blur(10px);
   position: fixed;
@@ -143,40 +134,19 @@ export default defineComponent({
   .controls-toggle {
     position: absolute;
     right: -60px;
-    background: red;
+    top: 0px;
+    background: rgb(255, 255, 255);
     width: 50px;
     height: 50px;
-    border-radius: 1rem;
+    border-radius: 10px;
   }
 
   .control {
-    margin-bottom: 1rem;
-
-    &.radio {
-      display: flex;
-      justify-content: space-around;
-
-      .perspective[type='radio'] {
-        display: none;
-      }
-
-      .perspective[type='radio']~label {
-        display: inline-block;
-        background: black;
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
-      }
-
-      .perspective[type='radio']:checked~label {
-        background: #4dab00;
-      }
-    }
+    margin-bottom: 10px;
   }
 
   .info {
     margin-bottom: 1rem;
-    background: red;
   }
 
   &__layers {
