@@ -17,7 +17,9 @@
           :checked="choice.value === currentChoice"
           @input="$emit('change', choice)"
         >
-        <label :for="`choice-${index}`" />
+        <label :for="`choice-${index}`">
+          <img :src="choice.icon">
+        </label>
       </div>
     </div>
   </div>
@@ -66,6 +68,9 @@ export default defineComponent({
     .choice-item {
       flex: 1;
       height: 40px;
+      img {
+        height: 100%;
+      }
     }
 
     .input[type='radio'] {

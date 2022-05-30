@@ -14,5 +14,6 @@ export enum PerpectiveDepth {
 export interface PerpectiveDepthChoice {
   name: string;
   label: string;
+  icon: string;
   value: number;
 }

@@ -19,9 +19,9 @@
       </div>
       <div class="control">
         <RadioChoice
-          :choices="perspectiveDepthChoices"
+          :choices="formStore.perspectiveDepthChoices"
           :current-choice="store.perspectiveRange"
-          label="RANGE"
+          label="DEPTH"
           @change="({value}) => store.perspectiveRange = value"
         />
       </div>
@@ -49,8 +49,9 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { PerpectiveDepth, PerpectiveDepthChoice } from '@/types/interfaces';
+import { PerpectiveDepth } from '@/types/interfaces';
 import useCardStore from '@/stores/card';
+import useFormStore from '@/stores/form';
 import Checkbox from '@/components/form/Checkbox.vue';
 import RadioChoice from '@/components/form/RadioChoice.vue';
 import ColorPicker from '@/components/form/ColorPicker.vue';
@@ -65,34 +66,13 @@ export default defineComponent({
   },
   setup() {
     const store = useCardStore();
-    const isVisible = ref(true);
+    const formStore = useFormStore();
 
-    const perspectiveDepthChoices = ref([
-      {
-        name: 'very-large',
-        label: 'Very large',
-        value: 1000,
-      },
-      {
-        name: 'large',
-        label: 'Large',
-        value: 1300,
-      },
-      {
-        name: 'medium',
-        label: 'Medium',
-        value: 1600,
-      },
-      {
-        name: 'small',
-        label: 'Small',
-        value: 2000,
-      },
-    ] as PerpectiveDepthChoice[]);
+    const isVisible = ref(true);
 
     return {
       store,
-      perspectiveDepthChoices,
+      formStore,
       PerpectiveDepth,
       isVisible,
       toggleVisibility: () => {
