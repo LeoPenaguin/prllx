@@ -20,7 +20,7 @@ import { computed } from '@vue/reactivity';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'CheckBox',
+  name: 'ColorPicker',
   props: {
     color: {
       type: String,
@@ -54,7 +54,7 @@ export default defineComponent({
   padding: 10px;
   border: 0.15em solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
   color: black;
   p {

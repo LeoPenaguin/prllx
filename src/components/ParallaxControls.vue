@@ -19,7 +19,8 @@
       </div>
       <div class="control">
         <RadioChoice
-          :choices="perspectiveRangeChoices"
+          :choices="perspectiveDepthChoices"
+          :current-choice="store.perspectiveRange"
           label="RANGE"
           @change="({value}) => store.perspectiveRange = value"
         />
@@ -31,27 +32,14 @@
           @change="(value) => store.backgroundColor = value"
         />
       </div>
+      <div class="control">
+        <LayersList
+          :layers="store.layers"
+          label="LAYERS"
+        />
+      </div>
     </div>
-    <div id="parallax-controls__layers">
-      <ul>
-        <li
-          v-for="layer in store.layers"
-          :key="layer.position"
-        >
-          <img
-            :src="layer.img"
-            :alt="layer.name"
-          >
 
-          <input
-            v-model="layer.depth"
-            type="number"
-          >
-
-          ({{ layer.position }}) {{ layer.name }} {{ layer.depth }}
-        </li>
-      </ul>
-    </div>
     <div class="info">
       <p>x: {{ store.originRange.x }}</p>
       <p>y: {{ store.originRange.y }}</p>
@@ -61,23 +49,25 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { PerpectiveDepth } from '@/types/interfaces';
+import { PerpectiveDepth, PerpectiveDepthChoice } from '@/types/interfaces';
 import useCardStore from '@/stores/card';
 import Checkbox from '@/components/form/Checkbox.vue';
 import RadioChoice from '@/components/form/RadioChoice.vue';
 import ColorPicker from '@/components/form/ColorPicker.vue';
+import LayersList from '@/components/form/LayersList.vue';
 
 export default defineComponent({
   components: {
     Checkbox,
     RadioChoice,
     ColorPicker,
+    LayersList,
   },
   setup() {
     const store = useCardStore();
     const isVisible = ref(true);
 
-    const perspectiveRangeChoices = ref([
+    const perspectiveDepthChoices = ref([
       {
         name: 'very-large',
         label: 'Very large',
@@ -98,11 +88,11 @@ export default defineComponent({
         label: 'Small',
         value: 2000,
       },
-    ]);
+    ] as PerpectiveDepthChoice[]);
 
     return {
       store,
-      perspectiveRangeChoices,
+      perspectiveDepthChoices,
       PerpectiveDepth,
       isVisible,
       toggleVisibility: () => {
@@ -117,7 +107,7 @@ export default defineComponent({
 #parallax-controls {
   width: 250px;
   padding: 10px;
-  background: rgba(211, 211, 211, 0.9);
+  background: rgba(211, 211, 211, 0.7);
   backdrop-filter: blur(10px);
   position: fixed;
   left: 1rem;
@@ -149,35 +139,5 @@ export default defineComponent({
     margin-bottom: 1rem;
   }
 
-  &__layers {
-    background: rgb(255, 255, 255);
-    padding: 3px;
-    margin-bottom: 1rem;
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-
-      li {
-        padding: 0;
-        margin: 0;
-        display: flex;
-        align-items: center;
-      }
-    }
-
-    img {
-      width: 20%;
-      background: white;
-      margin: 3px;
-    }
-
-    input {
-      width: 100px;
-    }
-  }
 }
 </style>

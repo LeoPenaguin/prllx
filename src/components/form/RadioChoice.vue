@@ -14,6 +14,7 @@
           type="radio"
           name="choice"
           :value="choice"
+          :checked="choice.value === currentChoice"
           @input="$emit('change', choice)"
         >
         <label :for="`choice-${index}`" />
@@ -23,13 +24,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PerpectiveDepthChoice } from '@/types/interfaces';
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-  name: 'CheckBox',
+  name: 'RadioChoice',
   props: {
     choices: {
-      type: Array,
+      type: Array as PropType<PerpectiveDepthChoice[]>,
+      required: true
+    },
+    currentChoice: {
+      type: Number,
       required: true
     },
     label: {

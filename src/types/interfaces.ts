@@ -10,3 +10,9 @@ export enum PerpectiveDepth {
   'medium' = 1500,
   'small' = 2000,
 }
+
+export interface PerpectiveDepthChoice {
+  name: string;
+  label: string;
+  value: number;
+}
