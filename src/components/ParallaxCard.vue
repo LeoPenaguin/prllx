@@ -2,7 +2,7 @@
   <div
     id="parallax-card__container"
     ref="container"
-    :class="{ 'dev-mode': store.isDevMode }"
+    :class="{ 'overflow-mode': store.isOverflowMode }"
     :style="{ backgroundColor: store.backgroundColor }"
     @mousemove="mousemove"
   >
@@ -10,6 +10,16 @@
       id="parallax-card__content"
       :style="style"
     >
+      <div
+        v-if="store.isFrameDisplayed"
+        class="frame"
+      >
+        <img
+          :src="store.frame"
+          alt=""
+          srcset=""
+        >
+      </div>
       <div
         v-if="store.originRange"
         id="parallax-card"
@@ -69,7 +79,6 @@ export default defineComponent({
 
         const style = computed(() => ({
             ...rotate3dValue.value,
-            aspectRatio: store.aspectRatio,
         }));
 
         return {
@@ -101,7 +110,23 @@ export default defineComponent({
     position: relative;
     overflow: hidden;
     border-radius: 20px;
-    box-shadow: 0 10px 10px inset;
+    background: rgb(67, 67, 67);
+
+    .frame {
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+      transition: transform 1s;
+      pointer-events: none;
+      z-index: 100;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
 
     #parallax-card {
         height: 100%;
@@ -126,33 +151,9 @@ export default defineComponent({
     }
 }
 
-#parallax-card__container.dev-mode {
+#parallax-card__container.overflow-mode {
     #parallax-card__content {
         overflow: visible;
-
-        #parallax-card {
-            .layer {
-                &:nth-child(1n) {
-                    border: 3px solid green;
-                }
-
-                &:nth-child(2n) {
-                    border: 3px solid red;
-                }
-
-                &:nth-child(3n) {
-                    border: 3px solid blue;
-                }
-
-                &:nth-child(4n) {
-                    border: 3px solid rgb(255, 0, 255);
-                }
-
-                &:nth-child(5n) {
-                    border: 3px solid rgb(255, 238, 0);
-                }
-            }
-        }
     }
 }
 </style>

@@ -1,15 +1,18 @@
 import { defineStore } from 'pinia';
 import type { Layer } from '@/types/interfaces';
 
-import img1Url from '@/assets/card2/1.png';
-import img2Url from '@/assets/card2/2.png';
-import img3Url from '@/assets/card2/3.png';
-import img4Url from '@/assets/card2/4.png';
-import img5Url from '@/assets/card2/5.png';
+import img1Url from '@/assets/card3/1.png';
+import img2Url from '@/assets/card3/2.png';
+import img3Url from '@/assets/card3/3.png';
+import img4Url from '@/assets/card3/4.png';
+import img5Url from '@/assets/card3/5.png';
+import frame from '@/assets/frames/1.png';
 
 export default defineStore('card', {
   state: () => ({
     perspectiveRange: 2000,
+    frame,
+    isFrameDisplayed: false,
     layers: [
       { position: 1, name: 'lol0', depth: 0, img: img1Url },
       { position: 2, name: 'lol1', depth: 50, img: img2Url },
@@ -20,24 +23,27 @@ export default defineStore('card', {
     aspectRatio: '2.5 / 3.5',
     originRange: { x: 50, y: 50 },
     backgroundColor: '#212121',
-    isDevMode: false,
+    isOverflowMode: false,
   }),
   actions: {
     setOrigin(x: number, y: number) {
       this.originRange = { x, y };
     },
-    toggleDevMode() {
-      this.isDevMode = !this.isDevMode;
+    toggleisOverflowMode() {
+      this.isOverflowMode = !this.isOverflowMode;
+    },
+    toggleIsFrameDisplayed() {
+      this.isFrameDisplayed = !this.isFrameDisplayed;
     },
     updateLayer(layer: Layer) {
       this.layers[this.layers.findIndex((l) => l.position === layer.position)] = layer;
     },
     calcCardRotation(xPostion: number, yPostion: number, component: HTMLInputElement) {
       const box = component.getBoundingClientRect();
-      const calcX = (yPostion - box.y - box.height / 2) / 500;
-      const calcY = -(xPostion - box.x - box.width / 2) / 500;
+      const calcX = -(yPostion - box.y - box.height / 2) / 20;
+      const calcY = (xPostion - box.x - box.width / 2) / 20;
 
-      return `perspective(100px) rotateX(${calcX}deg) rotateY(${calcY}deg) `;
+      return `rotateX(${calcX}deg) rotateY(${calcY}deg) `;
     },
   },
 });

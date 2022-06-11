@@ -12,9 +12,16 @@
     <div class="controls">
       <div class="control">
         <Checkbox
-          :checked="store.isDevMode"
-          label="DEV MODE"
-          @change="store.toggleDevMode()"
+          :checked="store.isOverflowMode"
+          label="OVERFLOW"
+          @change="store.toggleisOverflowMode()"
+        />
+      </div>
+      <div class="control">
+        <Checkbox
+          :checked="store.isFrameDisplayed"
+          label="FRAME"
+          @change="store.toggleIsFrameDisplayed()"
         />
       </div>
       <div class="control">
@@ -39,10 +46,12 @@
         />
       </div>
     </div>
-
     <div class="info">
-      <p>x: {{ store.originRange.x }}</p>
-      <p>y: {{ store.originRange.y }}</p>
+      <div class="info--head">
+        DETAILS
+      </div>
+      <p><span>Border radius</span> 20px</p>
+      <p><span>Aspect ratio</span> 2.5 / 3.5</p>
     </div>
   </div>
 </template>
@@ -116,7 +125,20 @@ export default defineComponent({
   }
 
   .info {
-    margin-bottom: 1rem;
+    background: rgba(84, 157, 181, 0.64);
+    padding: 10px;
+    border-radius: 5px;
+    &--head {
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    p {
+      span {
+        font-weight: bold;
+        color: rgb(0, 62, 82);
+      }
+    }
   }
 
 }
