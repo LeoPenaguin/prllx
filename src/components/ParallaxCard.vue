@@ -1,159 +1,95 @@
 <template>
   <div
-    id="parallax-card__container"
     ref="container"
-    :class="{ 'overflow-mode': store.isOverflowMode }"
-    :style="{ backgroundColor: store.backgroundColor }"
-    @mousemove="mousemove"
+    class="w-screen h-screen flex items-center justify-center"
+    :style="{
+      backgroundColor: card.backgroundColor,
+      perspective: `${card.perspectiveRange}px`,
+      perspectiveOrigin: `${card.originRange.x}% ${card.originRange.y}%`,
+    }"
+    @mousemove="onMouseMove"
+    @mouseleave="onMouseLeave"
   >
     <div
-      id="parallax-card__content"
-      :style="style"
+      :class="[
+        'h-[60%] max-h-[80%] aspect-2.5/3.5 relative rounded-[20px] bg-[rgb(67,67,67)]',
+        card.isOverflowMode ? '' : 'overflow-hidden',
+        settling ? 'transition-transform duration-500 ease-out' : '',
+      ]"
+      :style="cardStyle"
     >
       <div
-        v-if="store.isFrameDisplayed"
-        class="frame"
+        v-for="layer in card.layers"
+        :key="layer.position"
+        :class="['absolute inset-0 pointer-events-none', settling ? 'transition-transform duration-500 ease-out' : '']"
+        :style="{ transform: layerTransform(layer.depth) }"
       >
         <img
-          :src="store.frame"
-          alt=""
-          srcset=""
+          :src="layer.img"
+          :alt="layer.name"
+          class="w-full h-full"
         >
       </div>
       <div
-        v-if="store.originRange"
-        id="parallax-card"
-        ref="card"
-        :style="{
-          perspective: `${store.perspectiveRange}px`,
-          perspectiveOrigin: `${store.originRange.x}% ${store.originRange.y}%`,
-        }"
+        v-if="card.isFrameDisplayed"
+        class="absolute inset-0 pointer-events-none"
+        :style="{ transform: layerTransform(maxLayerDepth + 50) }"
       >
-        <div
-          v-for="layer in store.layers"
-          :key="layer.position"
-          class="layer"
-          :class="['layer_' + layer.position]"
-          :style="{ transform: `translateZ(${layer.depth}px)` }"
+        <img
+          :src="card.frame"
+          alt=""
+          class="w-full h-full"
         >
-          <img
-            :src="layer.img"
-            :alt="layer.name"
-          >
-        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
-import useCardStore from '@/stores/card'
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useCard } from '@/composables/useCard';
 
-export default defineComponent({
-    name: 'ParallaxCard',
-    setup() {
-        const store = useCardStore()
+const { card, setOrigin } = useCard();
 
-        const container = ref<HTMLInputElement>();
-        const card = ref<HTMLInputElement | null>(null);
-        const rotate3dValue = ref({});
+const container = ref<HTMLDivElement>();
+const rotation = ref({ x: 0, y: 0 });
+const settling = ref(false);
 
-        const mousemove = (event: MouseEvent) => {
-            const percentOf = (val1: number, val2: number) => (val1 / val2) * 100;
+const MAX_ROTATION = 15;
 
-            if (!container.value) {
-              return
-            }
+const maxLayerDepth = computed(() => Math.max(...card.layers.map((l) => l.depth)));
 
-            const rect = container.value.getBoundingClientRect();
-            const x = event.clientX - rect.left; // x position within the element.
-            const y = event.clientY - rect.top; // y position within the element.
+const onMouseMove = (event: MouseEvent) => {
+  if (!container.value) return;
 
-            store.setOrigin(percentOf(x, container.value.offsetWidth), percentOf(y, container.value.offsetHeight));
+  settling.value = false;
 
-            rotate3dValue.value = {
-                transform: store.calcCardRotation(x, y, container.value),
-            };
-        };
+  const { offsetWidth: w, offsetHeight: h } = container.value;
+  const rect = container.value.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
 
-        const style = computed(() => ({
-            ...rotate3dValue.value,
-        }));
+  setOrigin((x / w) * 100, (y / h) * 100);
 
-        return {
-            mousemove,
-            container,
-            card,
-            rotate3dValue,
-            style,
-            store,
-        };
-    },
-});
+  rotation.value = {
+    x: -((y - h / 2) / (h / 2)) * MAX_ROTATION,
+    y: ((x - w / 2) / (w / 2)) * MAX_ROTATION,
+  };
+};
+
+const onMouseLeave = () => {
+  settling.value = true;
+  rotation.value = { x: 0, y: 0 };
+  setOrigin(50, 50);
+};
+
+const cardStyle = computed(() => ({
+  transform: `rotateX(${rotation.value.x}deg) rotateY(${rotation.value.y}deg)`,
+}));
+
+function layerTransform(depth: number): string {
+  const tx = Math.sin(rotation.value.y * (Math.PI / 180)) * depth;
+  const ty = -Math.sin(rotation.value.x * (Math.PI / 180)) * depth;
+  return `translateX(${tx}px) translateY(${ty}px)`;
+}
 </script>
-
-<style lang="scss" scoped>
-#parallax-card__container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    perspective: 2000;
-}
-
-#parallax-card__content {
-    height: 60%;
-    max-height: 80%;
-    aspect-ratio: 2.5 / 3.5;
-    position: relative;
-    overflow: hidden;
-    border-radius: 20px;
-    background: rgb(67, 67, 67);
-
-    .frame {
-      position: absolute;
-      top: 0px;
-      bottom: 0px;
-      left: 0px;
-      right: 0px;
-      transition: transform 1s;
-      pointer-events: none;
-      z-index: 100;
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    #parallax-card {
-        height: 100%;
-        width: 100%;
-        transform-style: preserve-3d;
-        transform: translateZ(0px);
-
-        .layer {
-            position: absolute;
-            top: 0px;
-            bottom: 0px;
-            left: 0px;
-            right: 0px;
-            transition: transform 1s;
-            pointer-events: none;
-
-            img {
-                width: 100%;
-                height: 100%;
-            }
-        }
-    }
-}
-
-#parallax-card__container.overflow-mode {
-    #parallax-card__content {
-        overflow: visible;
-    }
-}
-</style>

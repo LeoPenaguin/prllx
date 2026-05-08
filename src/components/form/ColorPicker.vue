@@ -1,79 +1,42 @@
 <template>
-  <div id="color-picker">
-    <p>{{ label }}</p>
+  <div class="p-2.5 border-[0.15em] border-solid border-black/10 rounded-[10px] text-[1.3rem] font-bold text-black">
+    <p class="mb-2">{{ label }}</p>
     <label
-      id="color"
       for="background"
-    ><input
-      id="background"
-      v-model="colorValue"
-      type="color"
-    ><div
-      class="background-button"
-      :style="{backgroundColor: color}"
-    /></label>
+      class="flex"
+    >
+      <input
+        id="background"
+        v-model="colorValue"
+        type="color"
+        class="hidden"
+      >
+      <div
+        class="w-full h-12.5 block rounded-[7px] border-[0.15em] border-solid border-black/30"
+        :style="{ backgroundColor: color }"
+      />
+    </label>
   </div>
 </template>
 
-<script lang="ts">
-import { computed } from '@vue/reactivity';
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: 'ColorPicker',
-  props: {
-    color: {
-      type: String,
-      required: true
-    },
-    label: {
-      type: String,
-      default: null
-    }
+const props = defineProps<{
+  color: string;
+  label?: string;
+}>();
+
+const emit = defineEmits<{
+  change: [value: string];
+}>();
+
+const colorValue = computed({
+  get() {
+    return props.color;
   },
-  emits: ["change"],
-  setup(props, { emit }) {
-    const colorValue = computed({
-      get() {
-        props.color
-      },
-      set(value) {
-        emit('change', value)
-      }
-    })
-
-    return {
-      colorValue
-    }
-  }
+  set(value: string) {
+    emit('change', value);
+  },
 });
 </script>
-
-<style lang="scss">
-#color-picker {
-  padding: 10px;
-  border: 0.15em solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: black;
-  p {
-    margin-bottom: 0.5rem;
-  }
-  #color {
-    display: flex;
-    #background {
-      display: none;
-    }
-    .background-button {
-      width: 100%;
-      height: 50px;
-      background: red;
-      display: block;
-      border-radius: 7px;
-      border: 0.15em solid rgba(0, 0, 0, 0.3);
-    }
-  }
-}
-
-</style>

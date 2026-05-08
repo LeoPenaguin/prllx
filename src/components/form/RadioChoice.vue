@@ -1,95 +1,45 @@
 <template>
-  <div id="radio-choice">
-    <p>{{ label }}</p>
-
-    <div id="choices">
+  <div class="p-2.5 border-[0.15em] border-solid border-black/10 rounded-[10px] text-[1.3rem] font-bold text-black">
+    <p class="mb-2">{{ label }}</p>
+    <div class="flex justify-between gap-2.5">
       <div
         v-for="(choice, index) in choices"
         :key="index"
-        class="choice-item"
+        class="flex-1 h-10"
       >
         <input
           :id="`choice-${index}`"
-          class="input"
+          class="peer hidden"
           type="radio"
           name="choice"
           :value="choice"
           :checked="choice.value === currentChoice"
           @input="$emit('change', choice)"
         >
-        <label :for="`choice-${index}`">
-          <img :src="choice.icon">
+        <label
+          :for="`choice-${index}`"
+          class="flex items-center justify-center bg-white w-full h-full rounded-[10px] border-[0.15em] border-solid border-black/30 cursor-pointer peer-checked:bg-[rgb(112,171,112)]"
+        >
+          <img
+            :src="choice.icon"
+            class="h-full w-auto"
+          >
         </label>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { PerpectiveDepthChoice } from '@/types/interfaces';
-import { defineComponent, PropType } from 'vue';
+<script setup lang="ts">
+import type { PerspectiveDepthChoice } from '@/types/interfaces';
 
-export default defineComponent({
-  name: 'RadioChoice',
-  props: {
-    choices: {
-      type: Array as PropType<PerpectiveDepthChoice[]>,
-      required: true
-    },
-    currentChoice: {
-      type: Number,
-      required: true
-    },
-    label: {
-      type: String,
-      default: null
-    }
-  },
-  emits: ["change"],
-});
+defineProps<{
+  choices: PerspectiveDepthChoice[];
+  currentChoice: number;
+  label?: string;
+}>();
+
+defineEmits<{
+  change: [choice: PerspectiveDepthChoice];
+}>();
 </script>
-
-<style lang="scss">
-#radio-choice {
-  padding: 10px;
-  border: 0.15em solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: black;
-  p {
-    margin-bottom: 0.5rem;
-  }
-  #choices {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-
-    .choice-item {
-      flex: 1;
-      height: 40px;
-      img {
-        height: 100%;
-      }
-    }
-
-    .input[type='radio'] {
-      display: none;
-    }
-
-    .input[type='radio']~label {
-      display: inline-block;
-      background: rgb(255, 255, 255);
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-      border: 0.15em solid rgba(0, 0, 0, 0.3);
-    }
-
-    .input[type='radio']:checked~label {
-      background: rgb(112, 171, 112);
-    }
-  }
-}
-
-</style>

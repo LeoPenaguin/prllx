@@ -4,21 +4,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import ParallaxContainer from '@/components/ParallaxContainer.vue';
-
-export default defineComponent({
-  components: {
-    ParallaxContainer,
-  },
-});
 </script>
-
-<style lang="scss">
-@import '@/assets/reset.css';
-
-html {
-  font-family: sans-serif;
-}
-</style>

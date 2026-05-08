@@ -1,93 +1,32 @@
 <template>
-  <div id="layers">
-    <p>LAYERS</p>
-    <ul>
+  <div class="mb-4 border-[0.15em] border-solid border-black/10 rounded-[7px] p-2.5">
+    <p class="mb-2.5 text-[1.3rem] font-bold text-black">LAYERS</p>
+    <ul class="list-none p-0 m-0 flex flex-col gap-1.25">
       <li
         v-for="layer in layers"
         :key="layer.position"
+        class="flex items-center gap-1.25 rounded-[5px] bg-black/10 pr-1.25"
       >
         <img
           :src="layer.img"
           :alt="layer.name"
+          class="w-12.5 h-10 bg-white rounded-tl-[5px] rounded-bl-[5px]"
         >
-
         <input
           v-model="layer.depth"
           type="number"
+          class="w-full text-base font-bold text-black p-1.25 rounded-[5px] border-0 outline-none bg-transparent hover:bg-black/10 focus:bg-black/10"
         >
       </li>
     </ul>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { Layer } from '@/types/interfaces';
+<script setup lang="ts">
+import type { Layer } from '@/types/interfaces';
 
-export default defineComponent({
-  name: 'LayersList',
-  props: {
-    layers: {
-      type: Array as PropType<Layer[]>,
-      required: true
-    },
-    label: {
-      type: String,
-      default: null
-    }
-  },
-  emits: ["change"],
-});
+defineProps<{
+  layers: Layer[];
+  label?: string;
+}>();
 </script>
-
-<style lang="scss">
-#layers {
-  margin-bottom: 1rem;
-  border: 0.15em solid rgba(0, 0, 0, 0.1);
-  border-radius: 7px;
-  padding: 10px;
-  p {
-    margin-bottom: 10px;
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: black;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    li {
-      padding: 0;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      border-radius: 5px;
-      background: rgba(0, 0, 0, 0.1);
-      padding-right: 5px;
-      img {
-        width: 50px;
-        height: 40px;
-        background: white;
-        border-radius: 5px 0 0 5px;
-      }
-
-      input {
-        width: 100%;
-        font-size: 1rem;
-        font-weight: bold;
-        color: black;
-        padding: 5px;
-        border-radius: 5px;
-        &:hover, &:focus {
-          background: rgba(0, 0, 0, 0.1);
-        }
-      }
-    }
-  }
-}
-</style>

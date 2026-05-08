@@ -5,13 +5,13 @@ export interface Layer {
   depth: number;
 }
 
-export enum PerpectiveDepth {
+export enum PerspectiveDepth {
   'big' = 1200,
   'medium' = 1500,
   'small' = 2000,
 }
 
-export interface PerpectiveDepthChoice {
+export interface PerspectiveDepthChoice {
   name: string;
   label: string;
   icon: string;

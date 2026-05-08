@@ -1,145 +1,74 @@
 <template>
   <div
-    id="parallax-controls"
-    :class="{ 'is-hidden': !isVisible }"
+    class="w-62.5 p-2.5 bg-[rgba(211,211,211,0.7)] backdrop-blur-[10px] fixed top-4 rounded-2xl z-1000 text-white transition-[left] duration-300"
+    :class="isVisible ? 'left-4' : '-left-75'"
   >
     <button
-      class="controls-toggle"
+      class="absolute -right-15 top-0 bg-white w-12.5 h-12.5 rounded-[10px]"
       @click="toggleVisibility"
     >
       Close
     </button>
-    <div class="controls">
-      <div class="control">
+    <div>
+      <div class="mb-2.5">
         <Checkbox
-          :checked="store.isOverflowMode"
+          :checked="card.isOverflowMode"
           label="OVERFLOW"
-          @change="store.toggleisOverflowMode()"
+          @change="toggleIsOverflowMode()"
         />
       </div>
-      <div class="control">
+      <div class="mb-2.5">
         <Checkbox
-          :checked="store.isFrameDisplayed"
+          :checked="card.isFrameDisplayed"
           label="FRAME"
-          @change="store.toggleIsFrameDisplayed()"
+          @change="toggleIsFrameDisplayed()"
         />
       </div>
-      <div class="control">
+      <div class="mb-2.5">
         <RadioChoice
-          :choices="formStore.perspectiveDepthChoices"
-          :current-choice="store.perspectiveRange"
+          :choices="form.perspectiveDepthChoices"
+          :current-choice="card.perspectiveRange"
           label="DEPTH"
-          @change="({value}) => store.perspectiveRange = value"
+          @change="({ value }) => (card.perspectiveRange = value)"
         />
       </div>
-      <div class="control">
+      <div class="mb-2.5">
         <ColorPicker
-          :color="store.backgroundColor"
+          :color="card.backgroundColor"
           label="BACKGROUND"
-          @change="(value) => store.backgroundColor = value"
+          @change="(value) => (card.backgroundColor = value)"
         />
       </div>
-      <div class="control">
+      <div class="mb-2.5">
         <LayersList
-          :layers="store.layers"
+          :layers="card.layers"
           label="LAYERS"
         />
       </div>
     </div>
-    <div class="info">
-      <div class="info--head">
-        DETAILS
-      </div>
-      <p><span>Border radius</span> 20px</p>
-      <p><span>Aspect ratio</span> 2.5 / 3.5</p>
+    <div class="bg-[rgba(84,157,181,0.64)] p-2.5 rounded-[5px]">
+      <div class="font-bold text-center mb-1.25">DETAILS</div>
+      <p><span class="font-bold text-[rgb(0,62,82)]">Border radius</span> 20px</p>
+      <p><span class="font-bold text-[rgb(0,62,82)]">Aspect ratio</span> 2.5 / 3.5</p>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { PerpectiveDepth } from '@/types/interfaces';
-import useCardStore from '@/stores/card';
-import useFormStore from '@/stores/form';
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useCard } from '@/composables/useCard';
+import { useForm } from '@/composables/useForm';
 import Checkbox from '@/components/form/Checkbox.vue';
 import RadioChoice from '@/components/form/RadioChoice.vue';
 import ColorPicker from '@/components/form/ColorPicker.vue';
 import LayersList from '@/components/form/LayersList.vue';
 
-export default defineComponent({
-  components: {
-    Checkbox,
-    RadioChoice,
-    ColorPicker,
-    LayersList,
-  },
-  setup() {
-    const store = useCardStore();
-    const formStore = useFormStore();
+const { card, toggleIsOverflowMode, toggleIsFrameDisplayed } = useCard();
+const { form } = useForm();
 
-    const isVisible = ref(true);
+const isVisible = ref(true);
 
-    return {
-      store,
-      formStore,
-      PerpectiveDepth,
-      isVisible,
-      toggleVisibility: () => {
-        isVisible.value = !isVisible.value;
-      },
-    };
-  },
-});
-</script>
-
-<style lang="scss" scoped>
-#parallax-controls {
-  width: 250px;
-  padding: 10px;
-  background: rgba(211, 211, 211, 0.7);
-  backdrop-filter: blur(10px);
-  position: fixed;
-  left: 1rem;
-  top: 1rem;
-  border-radius: 1rem;
-  z-index: 1000;
-  color: white;
-  transition: left 0.3s;
-
-  &.is-hidden {
-    left: -300px;
-  }
-
-  .controls-toggle {
-    position: absolute;
-    right: -60px;
-    top: 0px;
-    background: rgb(255, 255, 255);
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-  }
-
-  .control {
-    margin-bottom: 10px;
-  }
-
-  .info {
-    background: rgba(84, 157, 181, 0.64);
-    padding: 10px;
-    border-radius: 5px;
-    &--head {
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 5px;
-    }
-    p {
-      span {
-        font-weight: bold;
-        color: rgb(0, 62, 82);
-      }
-    }
-  }
-
+function toggleVisibility() {
+  isVisible.value = !isVisible.value;
 }
-</style>
+</script>
